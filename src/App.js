@@ -1,9 +1,11 @@
 import './App.css';
 
-import React, { useRef, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 function App() {
   const mapContainer = useRef(null);
+
+  const [map, setMap] = useState(null);
 
   // 지도 생성
   useEffect(() => {
@@ -14,12 +16,25 @@ function App() {
     };
 
     // 지도 생성
-    new window.kakao.maps.Map(mapContainer.current, options);
+    const map = new window.kakao.maps.Map(mapContainer.current, options);
+
+    // setState
+    setMap(map);
   }, []);
+
+  useEffect(() => {
+    if (!!map) {
+      // 축척 제한
+      map.setMinLevel(1);
+      map.setMaxLevel(12);
+    }
+  }, [map]);
 
   return (
     <div className="App">
       <div className="map-container" ref={mapContainer} />
+      <button onClick={() => map.setLevel(map.getLevel() - 1)}>확대</button>
+      <button onClick={() => map.setLevel(map.getLevel() + 1)}>축소</button>
     </div>
   );
 }
