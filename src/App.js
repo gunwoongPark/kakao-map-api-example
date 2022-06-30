@@ -2,9 +2,17 @@ import './App.css';
 
 import React, { useState, useEffect, useRef } from 'react';
 
+// dummy data
+import { currentLocationCoordinate } from './dummy';
+
+// img
+import currentLocation from './assets/currentLocation.svg';
+
 function App() {
+  // useRef
   const mapContainer = useRef(null);
 
+  // useState
   const [map, setMap] = useState(null);
   const [centerCoordinate, setCenterCoordinate] = useState('');
 
@@ -12,7 +20,7 @@ function App() {
   useEffect(() => {
     // 지도 옵션
     const options = {
-      center: new window.kakao.maps.LatLng(37.506214, 127.053397), //지도의 중심좌표.
+      center: new window.kakao.maps.LatLng(currentLocationCoordinate.latitude, currentLocationCoordinate.longitude), //지도의 중심좌표.
       level: 3,
     };
 
@@ -22,6 +30,19 @@ function App() {
     // 축척 제한
     map.setMinLevel(1);
     map.setMaxLevel(12);
+
+    // 내 위치 마커(image) 세팅
+    const imageSize = new window.kakao.maps.Size(125, 125);
+    const imageOption = { offset: new window.kakao.maps.Point(62.5, 62.5) };
+
+    const markerImage = new window.kakao.maps.MarkerImage(currentLocation, imageSize, imageOption);
+
+    const marker = new window.kakao.maps.Marker({
+      position: new window.kakao.maps.LatLng(currentLocationCoordinate.latitude, currentLocationCoordinate.longitude),
+      image: markerImage,
+    });
+
+    marker.setMap(map);
 
     // 지도에 이벤트 등록
     // 중심좌표 변경
@@ -35,7 +56,10 @@ function App() {
 
   // function
   const onClickMoveCurrentLocation = () => {
-    const moveLatLon = new window.kakao.maps.LatLng(37.506214, 127.053397);
+    const moveLatLon = new window.kakao.maps.LatLng(
+      currentLocationCoordinate.latitude,
+      currentLocationCoordinate.longitude,
+    );
     map.panTo(moveLatLon);
   };
 
