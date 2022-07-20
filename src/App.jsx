@@ -8,13 +8,15 @@ import { currentLocationCoordinate } from './dummy';
 // img
 import currentLocation from './assets/currentLocation.svg';
 
-function App() {
+export default function App() {
   // useRef
   const mapContainer = useRef(null);
 
   // useState
   const [map, setMap] = useState(null);
   const [centerCoordinate, setCenterCoordinate] = useState('');
+
+  const [overlayList, setOverlayList] = useState([]);
 
   // 지도 생성
   useEffect(() => {
@@ -54,6 +56,13 @@ function App() {
     setMap(map);
   }, []);
 
+  useEffect(() => {
+    if (!!map) {
+      // 커스텀 오버레이 생성 함수
+      const makeCustomOverlay = (name) => ``;
+    }
+  }, [map]);
+
   // function
   const onClickMoveCurrentLocation = () => {
     const moveLatLon = new window.kakao.maps.LatLng(
@@ -73,5 +82,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
