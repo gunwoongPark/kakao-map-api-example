@@ -2,27 +2,32 @@ import './App.css';
 
 import React, { useState, useEffect, useRef } from 'react';
 
-// dummy data
-import { currentLocationCoordinate } from './dummy';
-
 // img
 import currentLocation from './assets/currentLocation.svg';
 
 export default function App() {
   // useRef
   const mapContainer = useRef(null);
+  const currentLocationCoordinate = useRef({ latitude: 37.506214, longitude: 127.053397 });
 
   // useState
   const [map, setMap] = useState(null);
   const [centerCoordinate, setCenterCoordinate] = useState('');
 
-  const [overlayList, setOverlayList] = useState([]);
+  const [overlayList, setOverlayList] = useState([
+    { id: 1, name: '바나프레소', coordinate: { latitude: 37.505926, longitude: 127.052625 }, isClicked: false },
+    { id: 1, name: '이차돌', coordinate: { latitude: 37.503442, longitude: 127.051681 }, isClicked: false },
+    { id: 1, name: '지구당', coordinate: { latitude: 37.505252, longitude: 127.050335 }, isClicked: false },
+  ]);
 
   // 지도 생성
   useEffect(() => {
     // 지도 옵션
     const options = {
-      center: new window.kakao.maps.LatLng(currentLocationCoordinate.latitude, currentLocationCoordinate.longitude), //지도의 중심좌표.
+      center: new window.kakao.maps.LatLng(
+        currentLocationCoordinate.current.latitude,
+        currentLocationCoordinate.current.longitude,
+      ), //지도의 중심좌표.
       level: 3,
     };
 
@@ -40,7 +45,10 @@ export default function App() {
     const markerImage = new window.kakao.maps.MarkerImage(currentLocation, imageSize, imageOption);
 
     const marker = new window.kakao.maps.Marker({
-      position: new window.kakao.maps.LatLng(currentLocationCoordinate.latitude, currentLocationCoordinate.longitude),
+      position: new window.kakao.maps.LatLng(
+        currentLocationCoordinate.current.latitude,
+        currentLocationCoordinate.current.longitude,
+      ),
       image: markerImage,
     });
 
@@ -67,21 +75,21 @@ export default function App() {
   useEffect(() => {
     if (!!map) {
       // 커스텀 오버레이 생성 함수
-      const makeCustomOverlay = (name) => `
-      <div class="bubble_wrap" onClick="_auton_onClickCustomOverlay('${encodeURIComponent(JSON.stringify(company))}')">
-        <div class="bubble ${company.isClicked ? 'sky' : 'black'}">
-          <p>${name}</p>
-        </div>
-      </div>
-      `;
+      // const makeCustomOverlay = (name) => `
+      // <div class="bubble_wrap" onClick="_auton_onClickCustomOverlay('${encodeURIComponent(JSON.stringify(company))}')">
+      //   <div class="bubble ${company.isClicked ? 'sky' : 'black'}">
+      //     <p>${name}</p>
+      //   </div>
+      // </div>
+      // `;
     }
   }, [map]);
 
   // function
   const onClickMoveCurrentLocation = () => {
     const moveLatLon = new window.kakao.maps.LatLng(
-      currentLocationCoordinate.latitude,
-      currentLocationCoordinate.longitude,
+      currentLocationCoordinate.current.latitude,
+      currentLocationCoordinate.current.longitude,
     );
     map.panTo(moveLatLon);
   };
