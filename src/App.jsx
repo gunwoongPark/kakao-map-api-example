@@ -66,7 +66,9 @@ export default function App() {
 
   // 커스텀 오버레이 onClick 함수 window 객체에 선언
   useEffect(() => {
-    window.customOverlayOnClick = (id) => {};
+    window.customOverlayOnClick = (id) => {
+      console.log(id);
+    };
 
     return () => delete window.customOverlayOnClick;
   }, []);
@@ -75,15 +77,24 @@ export default function App() {
   useEffect(() => {
     if (!!map) {
       // 커스텀 오버레이 생성 함수
-      // const makeCustomOverlay = (name) => `
-      // <div class="bubble_wrap" onClick="_auton_onClickCustomOverlay('${encodeURIComponent(JSON.stringify(company))}')">
-      //   <div class="bubble ${company.isClicked ? 'sky' : 'black'}">
-      //     <p>${name}</p>
-      //   </div>
-      // </div>
-      // `;
+      const makeCustomOverlay = (overlay) => `
+      <div class="bubble_wrap" onClick="customOverlayOnClick(${overlay.id})">
+        <div class="bubble ${overlay.isClicked ? 'sky' : 'black'}">
+          <p>${overlay.name}</p>
+        </div>
+      </div>
+      `;
+
+      overlayList.forEach((el) => {
+        new window.kakao.maps.CustomOverlay({
+          map,
+          clickable: true,
+          position: new window.kakao.maps.LatLng(el.coordinate.longitude, el.coordinate.latitude),
+          content: makeCustomOverlay(el),
+        });
+      });
     }
-  }, [map]);
+  }, [map, overlayList]);
 
   // function
   const onClickMoveCurrentLocation = () => {
