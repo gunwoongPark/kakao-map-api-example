@@ -1,12 +1,48 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./App.css";
 
+declare global {
+  interface Window {
+    kakao: any;
+  }
+}
+
 function App() {
+  // useRef
+  const mapContainer = useRef(null);
+  const currentLocationCoordinate = useRef({
+    latitude: 37.506214,
+    longitude: 127.053397,
+  });
+
+  // useState
+  const [map, setMap] = useState(null);
+
+  // useEffect
   useEffect(() => {
-    console.log(process.env.REACT_APP_KAKAO_MAP_API_KEY);
+    // 지도 옵션
+    const options = {
+      center: new window.kakao.maps.LatLng(
+        currentLocationCoordinate.current.latitude,
+        currentLocationCoordinate.current.longitude
+      ),
+    };
+
+    // 지도 생성
+    const map = new window.kakao.maps.Map(mapContainer.current, options);
+
+    // 축척 제한
+    map.setMinLevel(1);
+    map.setMaxLevel(12);
+
+    setMap(map);
   }, []);
 
-  return <div className="App"></div>;
+  return (
+    <div className="App">
+      <div className="map-container" ref={mapContainer} />
+    </div>
+  );
 }
 
 export default App;
