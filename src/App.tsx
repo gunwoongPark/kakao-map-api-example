@@ -17,6 +17,7 @@ function App() {
 
   // useState
   const [map, setMap] = useState<any>(null);
+  const [centerCoordinate, setCenterCoordinate] = useState<string>("");
 
   // useEffect
   useEffect(() => {
@@ -45,6 +46,15 @@ function App() {
 
     marker.setMap(map);
 
+    // 이벤트 등록
+    window.kakao.maps.event.addListener(map, "center_changed", () => {
+      setCenterCoordinate(
+        `중심좌표의 위도 : ${map.getCenter().getLat()} 경도 : ${map
+          .getCenter()
+          .getLng()}`
+      );
+    });
+
     setMap(map);
   }, []);
 
@@ -53,6 +63,7 @@ function App() {
       <div className="map-container" ref={mapContainer} />
       <button onClick={() => map.setLevel(map.getLevel() - 1)}>확대</button>
       <button onClick={() => map.setLevel(map.getLevel() + 1)}>축소</button>
+      <p>{centerCoordinate}</p>
     </div>
   );
 }
