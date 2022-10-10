@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import "./App.css";
 
 declare global {
@@ -58,11 +58,24 @@ function App() {
     setMap(map);
   }, []);
 
+  // function
+  const onClickMoveCurrentLocation = useCallback(() => {
+    const moveLatLng = new window.kakao.maps.LatLng(
+      currentLocationCoordinate.current.latitude,
+      currentLocationCoordinate.current.longitude
+    );
+    map.panTo(moveLatLng);
+  }, [map]);
+
+  // TSX
   return (
     <div className="App">
       <div className="map-container" ref={mapContainer} />
       <button onClick={() => map.setLevel(map.getLevel() - 1)}>확대</button>
       <button onClick={() => map.setLevel(map.getLevel() + 1)}>축소</button>
+      <button onClick={() => onClickMoveCurrentLocation()}>
+        내 위치로 이동
+      </button>
       <p>{centerCoordinate}</p>
     </div>
   );
