@@ -35,6 +35,16 @@ function App() {
     map.setMinLevel(1);
     map.setMaxLevel(12);
 
+    // 내 위치 마커 세팅
+    const marker = new window.kakao.maps.Marker({
+      position: new window.kakao.maps.LatLng(
+        currentLocationCoordinate.current.latitude,
+        currentLocationCoordinate.current.longitude
+      ),
+    });
+
+    marker.setMap(map);
+
     setMap(map);
   }, []);
 
