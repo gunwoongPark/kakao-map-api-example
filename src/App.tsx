@@ -22,7 +22,11 @@ function App() {
     latitude: 37.506214,
     longitude: 127.053397,
   });
-  const pointList = useRef([
+
+  // useState
+  const [map, setMap] = useState<any>(null);
+  const [centerCoordinate, setCenterCoordinate] = useState<string>("");
+  const [pointList, setPointList] = useState<PointType[]>([
     {
       id: 1,
       name: "바나프레소",
@@ -42,10 +46,6 @@ function App() {
       isClicked: false,
     },
   ]);
-
-  // useState
-  const [map, setMap] = useState<any>(null);
-  const [centerCoordinate, setCenterCoordinate] = useState<string>("");
 
   // useEffect
   useEffect(() => {
@@ -87,9 +87,16 @@ function App() {
     setMap(map);
   }, []);
 
+  // 커스텀 오버레이 클릭 함수
   useEffect(() => {
     window.onClickCustomOverlay = (id: number) => {
-      console.log(id);
+      setPointList((prevPointList) =>
+        prevPointList.map((point) =>
+          point.id === id
+            ? { ...point, isClicked: true }
+            : { ...point, isClicked: false }
+        )
+      );
     };
   }, []);
 
@@ -106,7 +113,7 @@ function App() {
         `;
       };
 
-      pointList.current.forEach((point) => {
+      pointList.forEach((point) => {
         new window.kakao.maps.CustomOverlay({
           map,
           clickable: true,
@@ -118,7 +125,7 @@ function App() {
         });
       });
     }
-  }, [map]);
+  }, [map, pointList]);
 
   // function
   const onClickMoveCurrentLocation = useCallback(() => {
