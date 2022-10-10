@@ -16,7 +16,7 @@ function App() {
   });
 
   // useState
-  const [map, setMap] = useState(null);
+  const [map, setMap] = useState<any>(null);
 
   // useEffect
   useEffect(() => {
@@ -51,6 +51,8 @@ function App() {
   return (
     <div className="App">
       <div className="map-container" ref={mapContainer} />
+      <button onClick={() => map.setLevel(map.getLevel() - 1)}>확대</button>
+      <button onClick={() => map.setLevel(map.getLevel() + 1)}>축소</button>
     </div>
   );
 }
