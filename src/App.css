@@ -9,3 +9,60 @@
   width: 800px;
   height: 600px;
 }
+
+/* 말풍선 */
+.bubble_wrap {
+  z-index: 5;
+}
+.bubble {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: auto;
+  padding: 0 8px;
+  border-radius: 23px;
+  z-index: 2;
+  transform: translate(-75%, -125%);
+}
+.bubble.sky {
+  background: #1aa5a2;
+}
+.bubble.black {
+  background: #394956;
+}
+.bubble.sky::after {
+  border-top-color: #1aa5a2;
+}
+.bubble.black::after {
+  border-top-color: #394956;
+}
+.bubble::after {
+  content: "";
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 10px solid transparent;
+  border-bottom: 0;
+  margin-bottom: -10px;
+}
+.bubble p {
+  margin: 5px 0;
+  font-size: 12px;
+  color: #fff;
+  font-family: "NanumSquare";
+  font-weight: 600;
+}
+
+@media screen and (max-width: 500px) {
+  .bubble {
+    padding: calc(100vw * (11 / 428)) calc(100vw * (15 / 428));
+  }
+  .bubble::after {
+    bottom: calc(100vw * (2 / 428));
+    margin-bottom: calc(100vw * (-10 / 428));
+  }
+  .bubble p {
+    font-size: calc(100vw * (14 / 428));
+  }
+}
