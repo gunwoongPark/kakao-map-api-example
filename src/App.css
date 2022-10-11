@@ -23,6 +23,7 @@
   border-radius: 23px;
   z-index: 2;
   transform: translate(-75%, -125%);
+  cursor: pointer;
 }
 .bubble.sky {
   background: #1aa5a2;
