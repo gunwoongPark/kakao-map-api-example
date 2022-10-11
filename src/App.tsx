@@ -46,6 +46,7 @@ function App() {
       isClicked: false,
     },
   ]);
+  const [clickedPoint, setClickedPoint] = useState<PointType | null>(null);
 
   // useEffect
   useEffect(() => {
@@ -76,6 +77,12 @@ function App() {
     marker.setMap(map);
 
     // 이벤트 등록
+    window.kakao.maps.event.addListener(map, "click", () => {
+      setPointList((prevPointList) =>
+        prevPointList.map((point) => ({ ...point, isClicked: false }))
+      );
+    });
+
     window.kakao.maps.event.addListener(map, "center_changed", () => {
       setCenterCoordinate(
         `중심좌표의 위도 : ${map.getCenter().getLat()} 경도 : ${map
@@ -127,6 +134,16 @@ function App() {
     }
   }, [map, pointList]);
 
+  useEffect(() => {
+    const clickedPoint = pointList.find((point) => point.isClicked);
+
+    if (!!clickedPoint) {
+      setClickedPoint(clickedPoint);
+    } else {
+      setClickedPoint(null);
+    }
+  }, [pointList]);
+
   // function
   const onClickMoveCurrentLocation = useCallback(() => {
     const moveLatLng = new window.kakao.maps.LatLng(
@@ -139,13 +156,14 @@ function App() {
   // TSX
   return (
     <div className="App">
-      <div className="map-container" ref={mapContainer} />
+      <div className="map" ref={mapContainer} />
       <button onClick={() => map.setLevel(map.getLevel() - 1)}>확대</button>
       <button onClick={() => map.setLevel(map.getLevel() + 1)}>축소</button>
       <button onClick={() => onClickMoveCurrentLocation()}>
         내 위치로 이동
       </button>
       <p>{centerCoordinate}</p>
+      <p>{clickedPoint && `클릭한 포인트 : ${clickedPoint.name}`}</p>
     </div>
   );
 }
